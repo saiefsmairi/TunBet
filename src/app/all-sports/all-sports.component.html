@@ -1,0 +1,172 @@
+<div class="card text-center" style="width:800px">
+  <div class="card-header" style="background-color: #1a335b">
+    Coupon de Pari
+  </div>
+  <div class="card-body" style="color: black">
+    <p class="card-text" *ngFor="let cote of TabTaamirWar9a; let ax = index">
+      <ng-container *ngIf="cote.marketPlace != ''; else withmarket">
+        <b style="color: #c2185b">{{ cote.label }}</b> {{ cote.marketPlace
+        }}<b> Tip</b> {{ cote.LabelDeCote }} <b>Cote</b> {{ cote.cote }}
+      </ng-container>
+
+      <ng-template #withmarket>
+        <b style="color: #c2185b">{{ cote.label }}</b> <b>Tip</b>
+        {{ cote.LabelDeCote }} <b>Cote</b> {{ cote.cote }}
+      </ng-template>
+    </p>
+
+    <label for="name" >Mise Totale:</label>
+
+
+    <input type="text"  #MoneyInput   required size="10" [(ngModel)]="myInput" (input)="Gain(MoneyInput.value)" />
+    <a class="btn btn-primary">Submit Pari</a>
+  </div>
+  <div class="card-footer text-muted">
+    <p >Cote Total : {{ nam }}</p>
+      <div *ngIf="nam>0">
+    <p>GAINS POTENTIELS  <input type="text" [value]="myInput*nam" /></p>
+       </div>
+  </div>
+</div>
+
+<mat-tab-group>
+  <mat-tab
+    *ngFor="let Competition of AllCompetitionWihoutRepeat; index as index"
+    label="{{ Competition }}"
+    class="angular-with-newlines"
+  >
+    <table class="table table-striped table-dark">
+      <thead class="p-3 mb-2 bg-primary text-white">
+        <tr>
+          <th scope="col"></th>
+          <th scope="col">EventID</th>
+          <th scope="col">Date</th>
+          <th scope="col">Event</th>
+          <th scope="col" colspan="2">RÉSULTAT FINAL</th>
+          <th scope="col" colspan="3">Autres Paris</th>
+          <th></th>
+        </tr>
+      </thead>
+
+      <tr *ngFor="let event of footTable2[Competition]; let i = index">
+        <td *ngIf="idmtaasport.innerHTML == 100; else tennis">
+          <img
+            src="https://sbook.promocote.com/theme/promocote/images/footballWhite.svg"
+            alt=""
+            height="30"
+            width="30"
+          />
+        </td>
+
+        <ng-template #tennis>
+          <td *ngIf="idmtaasport.innerHTML == 600; else basket">
+            <img
+              src="https://sbook.promocote.com/theme/promocote/images/tennisWhite.svg"
+              alt=""
+              height="30"
+              width="30"
+            />
+          </td>
+        </ng-template>
+
+        <ng-template #basket>
+          <td *ngIf="idmtaasport.innerHTML == 601600; else rugby">
+            <img
+              src="https://sbook.promocote.com/theme/promocote/images/basketballBallWhite.svg"
+              alt=""
+              height="30"
+              width="30"
+            />
+          </td>
+        </ng-template>
+
+        <ng-template #rugby>
+          <td *ngIf="idmtaasport.innerHTML == 964500">
+            <img
+              src="https://sbook.promocote.com/theme/promocote/images/amFootballBallWhite.svg"
+              alt=""
+              height="30"
+              width="30"
+            />
+          </td>
+        </ng-template>
+
+        <td>{{ event.marketId }}</td>
+        <td>{{ event.end }}</td>
+        <td #idmtaasport hidden>{{ event.sportId }}</td>
+        <td>{{ event.label }}</td>
+
+        <ng-container *ngFor="let user2 of Table1x2[event.label]">
+          <td *ngFor="let CoteResFinal of user2" class="btn-group" role="group">
+            <div>
+              <label class="badge badge-warning" #label1x2>{{
+                CoteResFinal.label
+              }}</label>
+              <button
+                type="button"
+                class="btn btn-info"
+                (click)="
+                  getValue(
+                    event.label,
+                    '',
+                    CoteResFinal.label,
+                    CoteResFinal.cote
+                  )
+                "
+                #cote1x2
+              >
+                {{ CoteResFinal.cote }}
+              </button>
+            </div>
+          </td>
+        </ng-container>
+
+        <td></td>
+        <ng-container *ngFor="let user4 of TabAutreCotes[event.label]">
+          <td>
+            <button
+              (click)="toggleCollapse(event.marketId, event.label)"
+              class="btn btn-light"
+            >
+              show/hide
+            </button>
+          </td>
+
+          <td *ngFor="let user5 of user4" class="btn-group" role="group">
+            <div *ngIf="showTab == event.marketId && !isCollapsed">
+              <div class="card" style="width: 300px">
+                <div class="card-header" style="background-color: #1a335b">
+                  {{ user5.marketType }}
+                </div>
+                <div
+                  class="card-body"
+                  *ngFor="let OtherCotes of user5.outcomes"
+                >
+                  <label class="badge badge-warning">{{
+                    OtherCotes.label
+                  }}</label>
+                  <button
+                    type="button"
+                    class="btn btn-info"
+                    (click)="
+                      getValue(
+                        event.label,
+                        user5.marketType,
+                        OtherCotes.label,
+                        OtherCotes.cote
+                      )
+                    "
+                  >
+                    {{ OtherCotes.cote }}
+                  </button>
+                </div>
+              </div>
+            </div>
+          </td>
+        </ng-container>
+
+        <td></td>
+      </tr>
+    </table>
+  </mat-tab>
+</mat-tab-group>

@@ -1,0 +1,7 @@
+{
+    "/api/*":{
+        "target":"https://www.pointdevente.parionssport.fdj.fr",
+        "secure":false,
+        "changeOrigin":true
+    }
+}
